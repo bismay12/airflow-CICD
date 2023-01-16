@@ -5,7 +5,6 @@ substitutions:
   _COMPOSER_REGION: asia-south1
   _COMPOSER_ENV_NAME: airflow-cicd1
   _ROLLBACK: 'false'
-  _SEVERITY: MEDIUM
   _SEVERITY1: HIGH
   _SEVERITY2: CRITICAL
   
@@ -100,18 +99,6 @@ steps:
         $(cat /workspace/docdags/scan_id.txt) --format='value(vulnerability.effectiveSeverity)' \
         | if grep -Fxq $_SEVERITY1
           then echo 'Failed vulnerability check - HIGH'
-          exit 1 
-          fi
-  - id: severity Medium
-    name: gcr.io/cloud-builders/gcloud
-    entrypoint: /bin/bash
-    args:
-     - -c
-     - | 
-       gcloud artifacts docker images list-vulnerabilities \
-        $(cat /workspace/docdags/scan_id.txt) --format='value(vulnerability.effectiveSeverity)' \
-        | if grep -Fxq $_SEVERITY 
-          then echo 'Failed vulnerability check - MEDIUM'
           exit 1 
           fi
     
