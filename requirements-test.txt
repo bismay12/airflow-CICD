@@ -1,0 +1,4 @@
+pytest==7.0.1
+pytest-cov>=2.7.1
+coverage>=7.0.0
+cloud-composer-dag-test-utils==1.0.0
