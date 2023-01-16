@@ -66,7 +66,7 @@ steps:
   
 # Build the image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/niveustraining/airflow-image-uat:v1.0', '.']
+    args: ['build', '-t', 'gcr.io/niveustraining/airflow-image-uat:v2.0', '.']
 
 #  - id: scan
 #     name: gcr.io/cloud-builders/gcloud
@@ -74,7 +74,7 @@ steps:
 #     args:
 #      - -c
 #      - |
-#        gcloud artifacts docker images scan 'gcr.io/niveustraining/airflow-image-uat:v1.0' \
+#        gcloud artifacts docker images scan 'gcr.io/niveustraining/airflow-image-uat:v2.0' \
 #        --format='value(response.scan)' > /workspace/docdags/scan_id.txt
        
 #   - id: severity Critical
@@ -117,12 +117,12 @@ steps:
     
 # Push the image to GCR
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/niveustraining/airflow-image-uat:v1.0']
+    args: ['push', 'gcr.io/niveustraining/airflow-image-uat:v2.0']
     
 # vulnerability scan
 
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'container', 'images', 'describe', 'gcr.io/niveustraining/airflow-image-uat:v1.0', '--format=json']
+    args: ['beta', 'container', 'images', 'describe', 'gcr.io/niveustraining/airflow-image-uat:v2.0', '--format=json']
 
 # Removing the old build Dags object
   - name: 'gcr.io/cloud-builders/gsutil'
@@ -133,7 +133,7 @@ steps:
         gsutil -m rm -r gs://asia-south1-airflow-cicd1-99651280-bucket/dags/*
   
 # Pull the Older Image and get the previous dags
-  - name: gcr.io/niveustraining/airflow-image-uat:v1.0
+  - name: gcr.io/niveustraining/airflow-image-uat:v2.0
     entrypoint: /bin/bash
     args:
     - -c
