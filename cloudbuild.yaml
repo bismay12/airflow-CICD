@@ -65,7 +65,7 @@ steps:
   
 # Build the image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/niveustraining/airflow-image:v2.0', '.']
+    args: ['build', '-t', 'gcr.io/niveustraining/airflow-image:v1.0', '.']
 
   - id: scan
     name: gcr.io/cloud-builders/gcloud
@@ -73,7 +73,7 @@ steps:
     args:
      - -c
      - |
-       gcloud artifacts docker images scan 'gcr.io/niveustraining/airflow-image:v2.0' \
+       gcloud artifacts docker images scan 'gcr.io/niveustraining/airflow-image:v1.0' \
        --format='value(response.scan)' > /workspace/docdags/scan_id.txt
        
   - id: severity Critical
@@ -104,7 +104,7 @@ steps:
     
 # Push the image to GCR
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/niveustraining/airflow-image:v2.0']
+    args: ['push', 'gcr.io/niveustraining/airflow-image:v1.0']
 
 # vulnerability scan
 
@@ -120,7 +120,7 @@ steps:
         gsutil -m rm -r gs://asia-south1-airflow-cicd-547db037-bucket/dags/*
   
 # Pull the Older Image and get the previous dags
-  - name: gcr.io/niveustraining/airflow-image:v2.0
+  - name: gcr.io/niveustraining/airflow-image:v1.0
     entrypoint: /bin/bash
     args:
     - -c
