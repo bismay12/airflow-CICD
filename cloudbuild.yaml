@@ -114,15 +114,15 @@ steps:
 #           then echo 'Failed vulnerability check - MEDIUM'
 #           exit 1 
 #           fi
-
-# vulnerability scan
-
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'container', 'images', 'describe', 'gcr.io/niveustraining/airflow-image-uat:v1.0', '--format=json']
     
 # Push the image to GCR
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/niveustraining/airflow-image-uat:v1.0']
+    
+# vulnerability scan
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['beta', 'container', 'images', 'describe', 'gcr.io/niveustraining/airflow-image-uat:v1.0', '--format=json']
 
 # Removing the old build Dags object
   - name: 'gcr.io/cloud-builders/gsutil'
