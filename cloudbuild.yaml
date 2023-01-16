@@ -174,5 +174,5 @@ steps:
   
 availableSecrets:
     secretManager:
-    - versionName: projects/866354246469/secrets/dataflow-cicd/versions/latest
+    - versionName: projects/866354246469/secrets/airflow-CICD/versions/latest
       env: 'SSH_KEY'
