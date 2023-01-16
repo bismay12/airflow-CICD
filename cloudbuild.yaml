@@ -30,7 +30,7 @@ steps:
   - name: 'gcr.io/cloud-builders/git'
     args:
     - clone
-    - git@github.com:bismay12/sonar-test.git
+    - git@github.com:bismay12/airflow-CICD.git
     volumes:
     - name: 'ssh'
       path: /root/.ssh
