@@ -111,13 +111,13 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['beta', 'container', 'images', 'describe', 'gcr.io/niveustraining/airflow-image:v2.0', '--format=json']
 
-# # Removing the old build Dags object
-#   - name: 'gcr.io/cloud-builders/gsutil'
-#     entrypoint: 'bash'
-#     args:
-#       - '-c'
-#       - |
-#         gsutil -m rm -r gs://asia-south1-airflow-cicd-547db037-bucket/dags/*
+# Removing the old build Dags object
+  - name: 'gcr.io/cloud-builders/gsutil'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gsutil -m rm -r gs://asia-south1-airflow-cicd-547db037-bucket/dags/*
   
 # Pull the Older Image and get the previous dags
   - name: gcr.io/niveustraining/airflow-image:v2.0
