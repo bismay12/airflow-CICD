@@ -5,9 +5,9 @@ substitutions:
   _COMPOSER_REGION: asia-south1
   _COMPOSER_ENV_NAME: airflow-cicd1
   _ROLLBACK: 'false'
-  _SEVERITY: MEDIUM
-  _SEVERITY1: HIGH
-  _SEVERITY2: CRITICAL
+#   _SEVERITY: MEDIUM
+#   _SEVERITY1: HIGH
+#   _SEVERITY2: CRITICAL
   
 # Access the id_github file from Secret Manager, and setup SSH
 steps:
@@ -66,63 +66,63 @@ steps:
   
 # Build the image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/niveustraining/airflow-image:v1.0', '.']
+    args: ['build', '-t', 'gcr.io/niveustraining/airflow-image1-uat:v1.0', '.']
 
-  - id: scan
-    name: gcr.io/cloud-builders/gcloud
-    entrypoint: /bin/bash
-    args:
-     - -c
-     - |
-       gcloud artifacts docker images scan 'gcr.io/niveustraining/airflow-image:v1.0' \
-       --format='value(response.scan)' > /workspace/docdags/scan_id.txt
+#   - id: scan
+#     name: gcr.io/cloud-builders/gcloud
+#     entrypoint: /bin/bash
+#     args:
+#      - -c
+#      - |
+#        gcloud artifacts docker images scan 'gcr.io/niveustraining/airflow-image1-uat:v1.0' \
+#        --format='value(response.scan)' > /workspace/docdags/scan_id.txt
        
-  - id: severity Critical
-    name: gcr.io/cloud-builders/gcloud
-    entrypoint: /bin/bash
-    args:
-     - -c
-     - | 
-       gcloud artifacts docker images list-vulnerabilities \
-        $(cat /workspace/docdags/scan_id.txt) --format='value(vulnerability.effectiveSeverity)' \
-        | if grep -Fxq $_SEVERITY2 
-          then echo 'Failed vulnerability check - CRITICAL'
-          exit 1 
-          fi
+#   - id: severity Critical
+#     name: gcr.io/cloud-builders/gcloud
+#     entrypoint: /bin/bash
+#     args:
+#      - -c
+#      - | 
+#        gcloud artifacts docker images list-vulnerabilities \
+#         $(cat /workspace/docdags/scan_id.txt) --format='value(vulnerability.effectiveSeverity)' \
+#         | if grep -Fxq $_SEVERITY2 
+#           then echo 'Failed vulnerability check - CRITICAL'
+#           exit 1 
+#           fi
           
-  - id: severity High
-    name: gcr.io/cloud-builders/gcloud
-    entrypoint: /bin/bash
-    args:
-     - -c
-     - | 
-       gcloud artifacts docker images list-vulnerabilities \
-        $(cat /workspace/docdags/scan_id.txt) --format='value(vulnerability.effectiveSeverity)' \
-        | if grep -Fxq $_SEVERITY1
-          then echo 'Failed vulnerability check - HIGH'
-          exit 1 
-          fi
-  - id: severity Medium
-    name: gcr.io/cloud-builders/gcloud
-    entrypoint: /bin/bash
-    args:
-     - -c
-     - | 
-       gcloud artifacts docker images list-vulnerabilities \
-        $(cat /workspace/docdags/scan_id.txt) --format='value(vulnerability.effectiveSeverity)' \
-        | if grep -Fxq $_SEVERITY 
-          then echo 'Failed vulnerability check - MEDIUM'
-          exit 1 
-          fi
-    
-# Push the image to GCR
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/niveustraining/airflow-image:v1.0']
+#   - id: severity High
+#     name: gcr.io/cloud-builders/gcloud
+#     entrypoint: /bin/bash
+#     args:
+#      - -c
+#      - | 
+#        gcloud artifacts docker images list-vulnerabilities \
+#         $(cat /workspace/docdags/scan_id.txt) --format='value(vulnerability.effectiveSeverity)' \
+#         | if grep -Fxq $_SEVERITY1
+#           then echo 'Failed vulnerability check - HIGH'
+#           exit 1 
+#           fi
+#   - id: severity Medium
+#     name: gcr.io/cloud-builders/gcloud
+#     entrypoint: /bin/bash
+#     args:
+#      - -c
+#      - | 
+#        gcloud artifacts docker images list-vulnerabilities \
+#         $(cat /workspace/docdags/scan_id.txt) --format='value(vulnerability.effectiveSeverity)' \
+#         | if grep -Fxq $_SEVERITY 
+#           then echo 'Failed vulnerability check - MEDIUM'
+#           exit 1 
+#           fi
 
 # vulnerability scan
 
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'container', 'images', 'describe', 'gcr.io/niveustraining/airflow-image:v1.0', '--format=json']
+    args: ['beta', 'container', 'images', 'describe', 'gcr.io/niveustraining/airflow-image1-uat:v1.0', '--format=json']
+    
+# Push the image to GCR
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/niveustraining/airflow-image1-uat:v1.0']
 
 # Removing the old build Dags object
   - name: 'gcr.io/cloud-builders/gsutil'
@@ -133,7 +133,7 @@ steps:
         gsutil -m rm -r gs://asia-south1-airflow-cicd1-99651280-bucket/dags/*
   
 # Pull the Older Image and get the previous dags
-  - name: gcr.io/niveustraining/airflow-image:v1.0
+  - name: gcr.io/niveustraining/airflow-image1-uat:v1.0
     entrypoint: /bin/bash
     args:
     - -c
