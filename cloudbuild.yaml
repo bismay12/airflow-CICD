@@ -3,9 +3,9 @@ substitutions:
   _COMPOSER_REGION: asia-south1
   _COMPOSER_ENV_NAME: airflow-cicd
   _ROLLBACK: 'false'
-#  _SEVERITY: MEDIUM
-#  _SEVERITY1: HIGH
-#  _SEVERITY2: CRITICAL
+  _SEVERITY: MEDIUM
+  _SEVERITY1: HIGH
+  _SEVERITY2: CRITICAL
   
 # Access the id_github file from Secret Manager, and setup SSH
 steps:
