@@ -131,7 +131,7 @@ steps:
         gsutil -m rm -r gs://asia-south1-airflow-cicd-547db037-bucket/dags/*
   
 # Pull the Older Image and get the previous dags
-  - name: gcr.io/niveustraining/airflow-image-uat:v1.0
+  - name: gcr.io/niveustraining/airflow-image-uat:v2.0
     entrypoint: /bin/bash
     args:
     - -c
