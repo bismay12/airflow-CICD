@@ -2,7 +2,7 @@
 substitutions:
   _COMPOSER_REGION: asia-south1
   _COMPOSER_ENV_NAME: airflow-cicd
-  _ROLLBACK: 'False'
+  _ROLLBACK: 'True'
   _SEVERITY: MEDIUM
   _SEVERITY1: HIGH
   _SEVERITY2: CRITICAL
@@ -131,7 +131,7 @@ steps:
         gsutil -m rm -r gs://asia-south1-airflow-cicd-547db037-bucket/dags/*
   
 # Pull the Older Image and get the previous dags
-  - name: gcr.io/niveustraining/airflow-image-uat:v1.0
+  - name: gcr.io/niveustraining/airflow-image-uat:v2.0
     entrypoint: /bin/bash
     args:
     - -c
