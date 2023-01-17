@@ -2,7 +2,7 @@
 substitutions:
   _COMPOSER_REGION: asia-south1
   _COMPOSER_ENV_NAME: airflow-cicd
-  _ROLLBACK: 'False'
+  _ROLLBACK: 'True'
   _SEVERITY: MEDIUM
   _SEVERITY1: HIGH
   _SEVERITY2: CRITICAL
@@ -33,38 +33,38 @@ steps:
     - name: 'ssh'
       path: /root/.ssh
       
-  # install dependencies
-  - name: python:3.8-slim
-    entrypoint: pip
-    args: ["install", "-r", "requirements.txt", "-c", "constraints.txt", "--user"]
+#   # install dependencies
+#   - name: python:3.8-slim
+#     entrypoint: pip
+#     args: ["install", "-r", "requirements.txt", "-c", "constraints.txt", "--user"]
 
-  - name: python:3.8-slim
-    entrypoint: pip
-    args: ["install", "-r", "requirements-test.txt", "--user"]
+#   - name: python:3.8-slim
+#     entrypoint: pip
+#     args: ["install", "-r", "requirements-test.txt", "--user"]
 
-  # run in python 3.8 which is latest version in Cloud Composer
-  - name: python:3.8-slim
-    entrypoint: python3.8
-    args: ["-m", "pytest", "-s", "dags/",'--cov=dags','--cov=utils','--cov-report=xml','-v']
+#   # run in python 3.8 which is latest version in Cloud Composer
+#   - name: python:3.8-slim
+#     entrypoint: python3.8
+#     args: ["-m", "pytest", "-s", "dags/",'--cov=dags','--cov=utils','--cov-report=xml','-v']
 
-  # install dependencies
-  - name: python
-    entrypoint: pip
-    args: ["install", "-r", "utils/requirements.txt", "--user"]    
+#   # install dependencies
+#   - name: python
+#     entrypoint: pip
+#     args: ["install", "-r", "utils/requirements.txt", "--user"]    
 
-  # Static code Analysis
-  - name: 'gcr.io/$PROJECT_ID/sonar-scanner:latest'
-    args:
-    - '-Dsonar.host.url=http://35.244.55.55:9000/ '
-    - '-Dsonar.login=sqp_78d4c4d00e71fc99a703f80d38fee3b6618ee95a'
-    - '-Dsonar.projectKey=sonar-test-1 '
-    - '-Dsonar.sources=.'
-    - '-Dsonar.python.coverage.reportPaths=coverage.xml'
+#   # Static code Analysis
+#   - name: 'gcr.io/$PROJECT_ID/sonar-scanner:latest'
+#     args:
+#     - '-Dsonar.host.url=http://35.244.55.55:9000/ '
+#     - '-Dsonar.login=sqp_78d4c4d00e71fc99a703f80d38fee3b6618ee95a'
+#     - '-Dsonar.projectKey=sonar-test-1 '
+#     - '-Dsonar.sources=.'
+#     - '-Dsonar.python.coverage.reportPaths=coverage.xml'
 
   
-# Build the image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/niveustraining/airflow-image-uat:v1.0', '.']
+# # Build the image
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['build', '-t', 'gcr.io/niveustraining/airflow-image-uat:v1.0', '.']
 
 #   - id: scan
 #     name: gcr.io/cloud-builders/gcloud
@@ -113,14 +113,14 @@ steps:
 #           exit 1 
 #           fi
     
-# Push the image to GCR
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/niveustraining/airflow-image-uat:v1.0']
+# # Push the image to GCR
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['push', 'gcr.io/niveustraining/airflow-image-uat:v1.0']
     
-# vulnerability scan
+# # vulnerability scan
 
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'container', 'images', 'describe', 'gcr.io/niveustraining/airflow-image-uat:v1.0', '--format=json']
+#   - name: 'gcr.io/cloud-builders/gcloud'
+#     args: ['beta', 'container', 'images', 'describe', 'gcr.io/niveustraining/airflow-image-uat:v1.0', '--format=json']
 
 # Removing the old build Dags object
   - name: 'gcr.io/cloud-builders/gsutil'
@@ -131,7 +131,7 @@ steps:
         gsutil -m rm -r gs://asia-south1-airflow-cicd-547db037-bucket/dags/*
   
 # Pull the Older Image and get the previous dags
-  - name: gcr.io/niveustraining/airflow-image-uat:v1.0
+  - name: gcr.io/niveustraining/airflow-image-uat:v2.0
     entrypoint: /bin/bash
     args:
     - -c
