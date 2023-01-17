@@ -2,7 +2,7 @@
 substitutions:
   _COMPOSER_REGION: asia-south1
   _COMPOSER_ENV_NAME: airflow-cicd
-  _ROLLBACK: 'True'
+  _ROLLBACK: 'False'
   _SEVERITY: MEDIUM
   _SEVERITY1: HIGH
   _SEVERITY2: CRITICAL
